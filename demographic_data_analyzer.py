@@ -15,7 +15,7 @@ def calculate_demographic_data(print_data=True):
 
     # What is the average age of men?
     men = df[df['sex'] == 'Male']
-    average_age_men = df['age'].mean().round(decimals = 1)
+    average_age_men = men['age'].astype(float).mean().round(decimals = 1)
     # average_age_men = None
 
 
@@ -42,7 +42,7 @@ def calculate_demographic_data(print_data=True):
     # percentage with salary >50K
     advanced_education_with_high_salary_df = advanced_education_df[advanced_education_df['salary'] == '>50K']
     num_advanced_education_with_high_salary = len(advanced_education_with_high_salary_df)
-    advanced_education_with_high_salary_percent = round((num_advanced_education_with_high_salary/higher_education) * 100, 1)
+    higher_education_rich = round((num_advanced_education_with_high_salary/higher_education) * 100, 1)
     # higher_education_rich = None
     lower_education_with_high_salary_df = lower_education_df[lower_education_df['salary'] == '>50K']
     num_lower_education_with_high_salary = len(lower_education_with_high_salary_df)
@@ -66,14 +66,13 @@ def calculate_demographic_data(print_data=True):
 
 
     # What country has the highest percentage of people that earn >50K?
-    countries_salary_df= df.filter(['native-country', 'salary'])
-    country_salary_count = countries_salary_df.value_counts()
-    countries_high_sal_df = countries_salary_df[countries_salary_df['salary'] == '>50K']
-    num_countries_high_sal = len(countries_high_sal_df)
-    countries_high_sal_count = countries_high_sal_df.value_counts().reset_index(name = 'count')
-    highest_earning_country = countries_high_sal_count.iloc[countries_high_sal_count['count'].idxmax()]
-    # highest_earning_country = None
-    highest_earning_country_percentage = round((highest_earning_country['count']/num_countries_high_sal) * 100, 1)
+    total_per_country = df['native-country'].value_counts()
+    rich_per_country = df[df['salary'] == '>50K']['native-country'].value_counts()
+    percentage_rich = (rich_per_country/total_per_country) * 100
+    percentage_rich = percentage_rich.dropna().round(1)
+    highest_earning_country = percentage_rich.idxmax()
+    # # highest_earning_country = None
+    highest_earning_country_percentage = percentage_rich.max()
     # highest_earning_country_percentage = None
 
 
@@ -81,7 +80,7 @@ def calculate_demographic_data(print_data=True):
     india_df = df[df['native-country'].isin(['India'])]
     india_high_sal_df = india_df[india_df['salary'] == '>50K']
     india_occupation_count_df = india_high_sal_df['occupation'].value_counts().reset_index(name = 'count').rename(columns={'index': 'occupation'})
-    top_IN_occupation = india_occupation_count_df.iloc[india_occupation_count_df['count'].idxmax()]
+    top_IN_occupation = india_occupation_count_df.iloc[india_occupation_count_df['count'].idxmax()]['occupation']
     # top_IN_occupation = None
 
     # DO NOT MODIFY BELOW THIS LINE
@@ -114,7 +113,7 @@ def calculate_demographic_data(print_data=True):
 
 
 # df = pd.read_csv('adult.data.csv')
-# # print(df.head())
+# print(df.head())
 # # print(len(df))
 
 # TASK 1
@@ -167,25 +166,14 @@ def calculate_demographic_data(print_data=True):
 # print(f"percentage of people who work the minimum number of hours per week and have a salary of more than 50K:", min_hours_worked_with_high_sal_percent,"%")
 
 #TASK 8
-# countries_salary_df= df.filter(['native-country', 'salary'])
-# print(f"Filtered database with necessary columns:\n", countries_salary_df)
-# country_salary_count = countries_salary_df.value_counts()
-# print(f"Dataframe with count of each country with different salaries:\n", country_salary_count)
-#     # total_countries_salary_counted = country_salary_count.sum()
-#     # print(f"Checking if total adds up to ", len(df),":", total_countries_salary_counted)
-#     # num_unique_countries = countries_salary_df['native-country'].nunique()
-#     # print(f"Number of unique countries:", num_unique_countries)
-# countries_high_sal_df = countries_salary_df[countries_salary_df['salary'] == '>50K']
-# num_countries_high_sal = len(countries_high_sal_df)
-# print(f"DataFrame of countries with ONLY salaries greater than 50K:\n", countries_high_sal_df.head())
-# print(f"Total number of countries with salaries greater than 50K:", num_countries_high_sal)
-# countries_high_sal_count = countries_high_sal_df.value_counts().reset_index(name = 'count')
-# print(countries_high_sal_count)
-#     # print(f"Checking if total number of countries with high salary =", len(countries_high_sal_df), ":", countries_high_sal_count.sum())
-# country_with_highest_sal = countries_high_sal_count.iloc[countries_high_sal_count['count'].idxmax()]
-# print(f"Country with the highest count of salary greater than 50K:", country_with_highest_sal['native-country'])
-# country_with_highest_sal_percent = round((country_with_highest_sal['count']/num_countries_high_sal) * 100, 1)
-# print(country_with_highest_sal['native-country'], f"occupies", country_with_highest_sal_percent, "%", "of the total people with salary >50K.")
+# total_per_country = df['native-country'].value_counts()
+# rich_per_country = df[df['salary'] == '>50K']['native-country'].value_counts()
+# percentage_rich = (rich_per_country/total_per_country) * 100
+# percentage_rich = percentage_rich.dropna().round(1)
+# highest_earning_country = percentage_rich.idxmax()
+# highest_earning_percentage = percentage_rich.max()
+# print(f"Country with highest percentage of >50K earners: {highest_earning_country}")
+# print(f"Percentage: {highest_earning_percentage}%")
 
 # #TASK 9
 # india_df = df[df['native-country'].isin(['India'])]
@@ -197,5 +185,5 @@ def calculate_demographic_data(print_data=True):
 # print(f"Count of each occupation in India with salaries greater than 50K:\n", india_high_sal_df['occupation'].value_counts())
 # india_occupation_count_df = india_high_sal_df['occupation'].value_counts().reset_index(name = 'count').rename(columns={'index': 'occupation'})
 # print(india_occupation_count_df)
-# india_most_popular_occupation = india_occupation_count_df.iloc[india_occupation_count_df['count'].idxmax()]
+# india_most_popular_occupation = india_occupation_count_df.iloc[india_occupation_count_df['count'].idxmax()]['occupation']
 # print(f"Most popular occupation in India where salary is greater than 50K:", india_most_popular_occupation['occupation'])
