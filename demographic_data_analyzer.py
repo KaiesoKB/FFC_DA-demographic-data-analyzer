@@ -4,7 +4,6 @@ import pandas as pd
 def calculate_demographic_data(print_data=True):
     # Read data from file
     df = None
-
     # How many of each race are represented in this dataset? This should be a Pandas series with race names as the index labels.
     race_count = None
 
@@ -67,3 +66,51 @@ def calculate_demographic_data(print_data=True):
         highest_earning_country_percentage,
         'top_IN_occupation': top_IN_occupation
     }
+
+
+df = pd.read_csv('adult.data.csv')
+print(df.head())
+print(len(df))
+
+# race_count = df['race'].value_counts()
+# race_unique = df['race'].unique()
+# race_series = pd.Series(race_count, index = race_unique)
+# print(race_series)
+
+# men = df[df['sex'] == 'Male']
+# ave_men_age = df['age'].mean().round(decimals = 1)
+# print(men)
+# print(ave_men_age)
+
+# num_Bsc_degrees = len(df[df['education'] == 'Bachelors'])
+# num_education = len(df['education'])
+# Bsc_degree_percent = round((num_Bsc_degrees/num_education) * 100, 1)
+# print(Bsc_degree_percent)
+
+# advanced_education = ['Bachelors', 'Masters', 'Doctorate']
+# advanced_education_df = df[df['education'].isin(advanced_education)]
+# num_advanced_education = len(advanced_education_df)
+# advanced_education_with_high_salary_df = advanced_education_df[advanced_education_df['salary'] == '>50K']
+# num_advanced_education_with_high_salary = len(advanced_education_with_high_salary_df)
+# advanced_education_with_high_salary_percent = round((num_advanced_education_with_high_salary/num_advanced_education) * 100, 1)
+# print(f"percentage of people with advanced education (Bachelors, Masters, or Doctorate) who make more than 50K:", advanced_education_with_high_salary_percent,"%")
+
+# num_rows = len(df)
+# lower_education_df = df[~df['education'].isin(advanced_education)]
+# num_lower_education = len(lower_education_df)
+# lower_education_with_high_salary_df = lower_education_df[lower_education_df['salary'] == '>50K']
+# num_lower_education_with_high_salary = len(lower_education_with_high_salary_df)
+# lower_education_with_high_salary_percent = round((num_lower_education_with_high_salary/num_lower_education) * 100, 1)
+# print(f"percentage of people without advanced education who make more than 50K:", lower_education_with_high_salary_percent,"%")
+
+min_hour_per_week = df['hours-per-week'].min()
+print(min_hour_per_week)
+
+min_hours_worked_df = df[df['hours-per-week'].isin([1])]
+num_people_with_min_hours = len(df[df['hours-per-week'].isin([1])])
+print(num_people_with_min_hours)
+min_hours_worked_with_high_sal_df = min_hours_worked_df[min_hours_worked_df['salary'] == '>50K']
+print(min_hours_worked_with_high_sal_df)
+num_min_hours_worked_with_high_sal = len(min_hours_worked_with_high_sal_df)
+min_hours_worked_with_high_sal_percent = round((num_min_hours_worked_with_high_sal/num_people_with_min_hours) * 100, 1)
+print(f"percentage of people who work the minimum number of hours per week and have a salary of more than 50K:", min_hours_worked_with_high_sal_percent,"%")
